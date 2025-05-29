@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeSpot - Incident Reporting System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- Login Container -->
+    <div class="container" id="login-container">
+        <div class="login-wrapper">
+            <div class="login-image">
+                <div class="login-overlay"></div>
+                <div class="login-content">
+                    <div class="login-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <h1>SafeSpot</h1>
+                    </div>
+                    <p>Your community safety platform</p>
+                </div>
+            </div>
+            <div class="login-form-container">
+                <div class="login-header">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to your account</p>
+                </div>
+                <div class="form-container">
+                    <form id="login-form" method="post">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="password" name="password" required placeholder="Enter your password">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span>Login</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div class="dashboard-container hidden" id="user-dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>SafeSpot</span>
+                </div>
+                <button class="sidebar-toggle" id="user-sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <h4 class="user-name">User</h4>
+                        <span class="user-role">Citizen</span>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <button id="dashboard-btn" class="sidebar-btn active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button id="view-incidents-btn" class="sidebar-btn">
+                        <i class="fas fa-list"></i>
+                        <span>My Incidents</span>
+                    </button>
+                    <button id="report-incident-btn" class="sidebar-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Report Incident</span>
+                    </button>
+                    <button id="all-incidents-btn" class="sidebar-btn">
+                        <i class="fas fa-globe"></i>
+                        <span>All Incidents</span>
+                    </button>
+                    <button id="hotspots-btn" class="sidebar-btn">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>View Hotspots</span>
+                    </button>
+                    <button id="notifications-btn" class="sidebar-btn">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        <span id="notification-badge" class="badge hidden">0</span>
+                    </button>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h1 class="page-title">Dashboard</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <button class="btn-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge-dot hidden"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-container">
+                <!-- Dashboard Overview Section -->
+                <div id="dashboard-overview" class="dashboard-section">
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="my-incidents-count">0</h3>
+                                <p class="stat-label">My Reports</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 40%;"></div>
+                                <div class="chart-bar" style="height: 80%;"></div>
+                                <div class="chart-bar" style="height: 50%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="verified-count">0</h3>
+                                <p class="stat-label">Verified</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 30%;"></div>
+                                <div class="chart-bar" style="height: 70%;"></div>
+                                <div class="chart-bar" style="height: 50%;"></div>
+                                <div class="chart-bar" style="height: 90%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="pending-count">0</h3>
+                                <p class="stat-label">Pending</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 50%;"></div>
+                                <div class="chart-bar" style="height: 30%;"></div>
+                                <div class="chart-bar" style="height: 70%;"></div>
+                                <div class="chart-bar" style="height: 40%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon red">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="hotspots-count">0</h3>
+                                <p class="stat-label">Hotspots</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 20%;"></div>
+                                <div class="chart-bar" style="height: 40%;"></div>
+                                <div class="chart-bar" style="height: 30%;"></div>
+                                <div class="chart-bar" style="height: 60%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW: User Dashboard Graphs Section -->
+                    <div class="dashboard-row">
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>My Incidents Status</h3>
+                                </div>
+                                <div class="graph-container" id="user-status-graph">
+                                    <img src="static/graphs/user_1_status_pie.png" alt="My Incidents Status" class="graph-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="graph-placeholder" style="display: none;">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>No data available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>My Incidents by Category</h3>
+                                </div>
+                                <div class="graph-container" id="user-category-graph">
+                                    <img src="static/graphs/user_1_category_bar.png" alt="My Incidents by Category" class="graph-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="graph-placeholder" style="display: none;">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <p>No data available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-col-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Recent Incidents</h3>
+                                    <button class="btn btn-text" id="view-all-incidents">View All</button>
+                                </div>
+                                <div class="table-container">
+                                    <table class="data-table" id="recent-incidents-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Category</th>
+                                                <th>Location</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recent-incidents-table-body">
+                                            <!-- Recent incidents will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-col-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Recent Notifications</h3>
+                                    <button class="btn btn-text" id="view-all-notifications">View All</button>
+                                </div>
+                                <div class="recent-notifications" id="recent-notifications-container">
+                                    <!-- Recent notifications will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Incident Categories</h3>
+                                </div>
+                                <div class="category-stats" id="category-stats-container">
+                                    <!-- Category stats will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Hotspot Map</h3>
+                                </div>
+                                <div class="map-placeholder">
+                                    <div class="map-overlay">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <p>Interactive map coming soon</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Incidents Section -->
+                <div id="view-incidents" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>My Incident Reports</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline btn-sm refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table id="incidents-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Category</th>
+                                        <th>Location</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="incidents-table-body">
+                                    <!-- Incidents will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Report Incident Section -->
+                <div id="report-incident" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Report New Incident</h2>
+                    </div>
+                    <div class="card">
+                        <form id="incident-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <select id="category" name="category" required>
+                                        <option value="">-- Select Category --</option>
+                                        <!-- Categories will be loaded here -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" id="address" name="address" required placeholder="Enter address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">City</label>
+                                    <input type="text" id="city" name="city" required placeholder="Enter city">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" rows="4" required placeholder="Describe the incident in detail"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Submit Report</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- All Incidents Section for Users -->
+                <div id="all-incidents" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>All Incident Reports</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline btn-sm refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table id="all-incidents-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Category</th>
+                                        <th>Location</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Verification</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-incidents-table-body">
+                                    <!-- Incidents will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hotspots Section for Users -->
+                <div id="hotspots" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Hotspot Areas</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline btn-sm refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table id="hotspots-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Location</th>
+                                        <th>Category</th>
+                                        <th>Report Count</th>
+                                        <th>Radius (m)</th>
+                                        <th>Predicted Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hotspots-table-body">
+                                    <!-- Hotspots will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Section for Users -->
+                <div id="notifications" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Your Notifications</h2>
+                    </div>
+                    <div class="notifications-container" id="user-notifications-container">
+                        <!-- Notifications will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="dashboard-container hidden" id="admin-dashboard">
+        <div class="sidebar admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>SafeSpot</span>
+                </div>
+                <button class="sidebar-toggle" id="admin-sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="user-profile">
+                    <div class="user-avatar admin">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="user-info">
+                        <h4 class="user-name">Admin</h4>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <button id="admin-dashboard-btn" class="sidebar-btn active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button id="manage-incidents-btn" class="sidebar-btn">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Manage Incidents</span>
+                    </button>
+                    <button id="manage-users-btn" class="sidebar-btn">
+                        <i class="fas fa-users"></i>
+                        <span>Manage Users</span>
+                    </button>
+                    <button id="manage-teams-btn" class="sidebar-btn">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Response Teams</span>
+                    </button>
+                    <button id="manage-hotspots-btn" class="sidebar-btn">
+                        <i class="fas fa-fire"></i>
+                        <span>Manage Hotspots</span>
+                    </button>
+                    <button id="add-user-btn" class="sidebar-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add User</span>
+                    </button>
+                    <button id="admin-notifications-btn" class="sidebar-btn">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        <span id="admin-notification-badge" class="badge hidden">0</span>
+                    </button>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <button id="admin-logout-btn" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h1 class="page-title">Admin Dashboard</h1>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <button class="btn-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge-dot hidden"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-container">
+                <!-- Admin Dashboard Overview -->
+                <div id="admin-dashboard-overview" class="dashboard-section">
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="total-incidents-count">0</h3>
+                                <p class="stat-label">Total Incidents</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 80%;"></div>
+                                <div class="chart-bar" style="height: 70%;"></div>
+                                <div class="chart-bar" style="height: 90%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon teal">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="total-users-count">0</h3>
+                                <p class="stat-label">Users</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 40%;"></div>
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 80%;"></div>
+                                <div class="chart-bar" style="height: 70%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon amber">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="total-teams-count">0</h3>
+                                <p class="stat-label">Response Teams</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 30%;"></div>
+                                <div class="chart-bar" style="height: 50%;"></div>
+                                <div class="chart-bar" style="height: 40%;"></div>
+                                <div class="chart-bar" style="height: 60%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon pink">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3 class="stat-value" id="admin-hotspots-count">0</h3>
+                                <p class="stat-label">Hotspots</p>
+                            </div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="height: 50%;"></div>
+                                <div class="chart-bar" style="height: 30%;"></div>
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 40%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Admin Dashboard Graphs Section -->
+                    <div class="dashboard-row">
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Incident Status Distribution</h3>
+                                </div>
+                                <div class="graph-container" id="admin-status-graph">
+                                    <img src="static/graphs/admin_status_distribution.png" alt="Status Distribution" class="graph-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="graph-placeholder" style="display: none;">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>No data available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Incidents by Category</h3>
+                                </div>
+                                <div class="graph-container" id="admin-category-graph">
+                                    <img src="static/graphs/admin_category_stats.png" alt="Category Statistics" class="graph-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="graph-placeholder" style="display: none;">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <p>No data available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Monthly Incident Trends</h3>
+                                </div>
+                                <div class="graph-container" id="admin-trends-graph">
+                                    <img src="static/graphs/admin_monthly_trends.png" alt="Monthly Trends" class="graph-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="graph-placeholder" style="display: none;">
+                                        <i class="fas fa-chart-line"></i>
+                                        <p>No data available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Hotspots by Location</h3>
+                                </div>
+                                <div class="graph-container" id="admin-hotspots-graph">
+                                    <img src="static/graphs/admin_hotspots_distribution.png" alt="Hotspots Distribution" class="graph-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="graph-placeholder" style="display: none;">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <p>No data available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-col-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Recent Incidents</h3>
+                                    <button class="btn btn-text" id="admin-view-all-incidents">View All</button>
+                                </div>
+                                <div class="table-container">
+                                    <table class="data-table" id="admin-recent-incidents-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Reported By</th>
+                                                <th>Category</th>
+                                                <th>Location</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-recent-incidents-table-body">
+                                            <!-- Recent incidents will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-col-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Recent Notifications</h3>
+                                    <button class="btn btn-text" id="admin-view-all-notifications">View All</button>
+                                </div>
+                                <div class="recent-notifications" id="admin-recent-notifications-container">
+                                    <!-- Recent notifications will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-row">
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Incident Status</h3>
+                                </div>
+                                <div class="status-chart">
+                                    <div class="status-chart-container">
+                                        <div class="status-chart-item">
+                                            <div class="status-chart-bar pending" id="pending-chart-bar" style="height: 40%;">
+                                                <span class="status-chart-value" id="pending-percent">0%</span>
+                                            </div>
+                                            <span class="status-chart-label">Pending</span>
+                                        </div>
+                                        <div class="status-chart-item">
+                                            <div class="status-chart-bar verified" id="verified-chart-bar" style="height: 70%;">
+                                                <span class="status-chart-value" id="verified-percent">0%</span>
+                                            </div>
+                                            <span class="status-chart-label">Verified</span>
+                                        </div>
+                                        <div class="status-chart-item">
+                                            <div class="status-chart-bar rejected" id="rejected-chart-bar" style="height: 20%;">
+                                                <span class="status-chart-value" id="rejected-percent">0%</span>
+                                            </div>
+                                            <span class="status-chart-label">Rejected</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Hotspot Map</h3>
+                                </div>
+                                <div class="map-placeholder">
+                                    <div class="map-overlay">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <p>Interactive map coming soon</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Incidents Section -->
+                <div id="manage-incidents" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Manage Incidents</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline btn-sm refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table id="admin-incidents-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Reported By</th>
+                                        <th>Category</th>
+                                        <th>Location</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-incidents-table-body">
+                                    <!-- Incidents will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manage Users Section -->
+                <div id="manage-users" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Manage Users</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline btn-sm refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table id="users-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Role</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <!-- Users will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manage Response Teams Section -->
+                <div id="manage-teams" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Response Teams</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline btn-sm refresh-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table id="teams-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Contact Email</th>
+                                        <th>Contact Phone</th>
+                                        <th>City</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teams-table-body">
+                                    <!-- Teams will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Hotspots Section -->
+                <div id="manage-hotspots" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Manage Hotspot Areas</h2>
+                        <div class="section-actions">
+                            <button id="add-hotspot-btn" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i>
+                                <span>Add Hotspot</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table id="admin-hotspots-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Location</th>
+                                        <th>Category</th>
+                                        <th>Report Count</th>
+                                        <th>Radius (m)</th>
+                                        <th>Predicted Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-hotspots-table-body">
+                                    <!-- Hotspots will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add User Section -->
+                <div id="add-user" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Add New User</h2>
+                    </div>
+                    <div class="card">
+                        <form id="add-user-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-user-name">Name</label>
+                                    <input type="text" id="new-user-name" name="name" required placeholder="Enter full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-user-email">Email</label>
+                                    <input type="email" id="new-user-email" name="email" required placeholder="Enter email address">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-user-password">Password</label>
+                                    <input type="password" id="new-user-password" name="password" required placeholder="Enter password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-user-phone">Phone</label>
+                                    <input type="text" id="new-user-phone" name="phone" placeholder="Enter phone number">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-user-role">Role</label>
+                                    <select id="new-user-role" name="role" required>
+                                        <option value="">-- Select Role --</option>
+                                        <option value="1">User</option>
+                                        <option value="2">Admin</option>
+                                        <option value="3">Responder</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-user-team">Response Team (for Responders)</label>
+                                    <select id="new-user-team" name="team">
+                                        <option value="">-- None --</option>
+                                        <!-- Teams will be loaded here -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Add User</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Admin Notifications Section -->
+                <div id="admin-notifications" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Notifications</h2>
+                    </div>
+                    <div class="notifications-container" id="admin-notifications-container">
+                        <!-- Notifications will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="incident-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Incident Details</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-incident-form">
+                    <input type="hidden" id="edit-incident-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-category">Category</label>
+                            <select id="edit-category" name="category" required>
+                                <!-- Categories will be loaded here -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-status">Status</label>
+                            <select id="edit-status" name="status" required>
+                                <option value="pending">Reported</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="verified">Verified</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-team">Assign Response Team</label>
+                        <select id="edit-team" name="team">
+                            <option value="">-- Select Team --</option>
+                            <!-- Teams will be loaded here -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-description">Description</label>
+                        <textarea id="edit-description" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            <span>Save Changes</span>
+                        </button>
+                        <button type="button" id="delete-incident-btn" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Modal -->
+    <div id="verification-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Verify Incident</h2>
+                <button class="close-verification-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="verification-form">
+                    <input type="hidden" id="verification-incident-id">
+                    <div class="incident-details-box">
+                        <p id="verification-incident-details"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Is this incident report accurate?</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="vote" value="True" required>
+                                <span class="radio-custom"></span>
+                                <span>True</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="vote" value="fake" required>
+                                <span class="radio-custom"></span>
+                                <span>Fake</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Submit Verification</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hotspot Modal -->
+    <div id="hotspot-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Hotspot Area</h2>
+                <button class="close-hotspot-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="hotspot-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="hotspot-location">Location</label>
+                            <select id="hotspot-location" name="location" required>
+                                <!-- Locations will be loaded here -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotspot-category">Category</label>
+                            <select id="hotspot-category" name="category" required>
+                                <!-- Categories will be loaded here -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="hotspot-count">Report Count</label>
+                            <input type="number" id="hotspot-count" name="count" min="1" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hotspot-radius">Radius (meters)</label>
+                            <input type="number" id="hotspot-radius" name="radius" min="100" value="500" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Add Hotspot</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
